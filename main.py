@@ -8,6 +8,9 @@ from discord import SyncWebhook
 from colorama import *
 from colorama import init
 import subprocess
+import sys
+import tkinter as tk
+from tkinter import messagebox
 
 init()
 
@@ -53,6 +56,38 @@ def float_menu():
 {Fore.RED + Style.NORMAL}____________________________________________________________________________________________________________________{Fore.RESET}
     '''
 
+def open_window(message):
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+
+    # Show the message box
+    messagebox.showinfo("Float Multi-Purpose Tool", message)
+
+    # Close the window after showing the message
+    root.destroy()
+
+repo_owner = "skyliner1123"
+repo_name = "Float"
+
+def check_for_update():
+    try:
+        # Fetch latest version from version.txt file
+        with open("version.txt", "r") as file:
+            latest_version = file.read().strip()
+
+        return latest_version
+    except FileNotFoundError:
+        print("Version file not found. Unable to check for updates.")
+        return None
+
+def update_script(latest_version):
+    try:
+        # Update version.txt file with the latest version
+        with open("version.txt", "w") as file:
+            file.write(latest_version)
+    except Exception as e:
+        print("An error occurred while updating the version file:", e)
+
 def check_password(username, password):
     with open("passwords.txt", "r") as file:
         for line in file:
@@ -70,6 +105,12 @@ def check_password(username, password):
         print("Username not found")
         return False
 
+import os
+from colorama import Fore
+
+import os
+from colorama import Fore
+
 def main():
     print(float_menu())
     choice = input(f"{Fore.RED}root@float{Fore.RESET} Enter your choice: ")
@@ -81,8 +122,29 @@ def main():
             print("Login Failed")
     elif choice == "0":
         print("Exiting...")
+    elif choice == "8":
+        latest_version = check_for_update()
+        if latest_version and latest_version != "v1.0":  # Replace "v1.0" with the current version of your script
+            print("A new version is available! Do you want to update? (yes/no)")
+            update_choice = input().lower()
+            if update_choice == "yes":
+                print("Updating script...")
+                update_script(latest_version)  # Update version.txt with the latest version
+                current_version = check_for_update()  # Read the updated version from version.txt
+                print("Current version after update:", current_version)
+                if current_version == latest_version:
+                    print("Script is already up to date.")
+                else:
+                    update_script(latest_version)  # Perform the script update with the latest version
+                    print("Update successful. Please restart the script.")
+                    exit()
+            else:
+                print("Skipping update.")
+        else:
+            print("No update available.")
+
     else:
-        print("Invalid choice")
+        open_window("That's Not An Option!")
         os.system("cls")
         main()
 
