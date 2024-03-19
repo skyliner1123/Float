@@ -1,0 +1,9 @@
+random
+string
+requests
+os
+discord
+time
+discord
+colorama
+subprocess
